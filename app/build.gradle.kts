@@ -1,10 +1,11 @@
 plugins {
-//    alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
-
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    id("com.google.dagger.hilt.android")
+
+    id("org.jetbrains.kotlin.kapt")
+//    id("com.google.devtools.ksp")  // Если решил использовать KSP
 }
 
 android {
@@ -41,12 +42,11 @@ android {
 }
 
 dependencies {
-    // Core
+    // ===== CORE & COMPOSE (оставляем как есть) =====
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
 
-    // Compose BOM (НОВАЯ ВЕРСИЯ!)
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -55,27 +55,39 @@ dependencies {
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-core")
 
-    // ViewModel & Lifecycle
+    // ===== VIEWMODEL & LIFECYCLE =====
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
-    // Coroutines
+    // ===== COROUTINES =====
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Network
+    // ===== NETWORK =====
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // Debug
+    // ===== HILT DEPENDENCIES =====
+    implementation("com.google.dagger:hilt-android:2.48.1")
+//    ksp("com.google.dagger:hilt-android-compiler:2.48.1")  // Компилятор для Hilt через KSP
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+
+    // ===== Hilt для работы с ViewModel в Compose =====
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // ===== DEBUG =====
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Test
+    // ===== TEST =====
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
+//ksp {
+//    arg("dagger.fastInit", "ENABLED")  // Ускоряет компиляцию
+//    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")  // Убирает лишние предупреждения
+//}
