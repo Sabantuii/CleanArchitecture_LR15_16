@@ -25,32 +25,18 @@ import com.example.lr_15_16_jetcom.ui.theme.LR_15_16_JetComTheme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// [ЛР 17] @AndroidEntryPoint - разрешает внедрение в Activity
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 1. Data Layer Setup
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com/")
-            // Примечание: для реального теста лучше использовать свой API или мок,
-            // так как JSONPlaceholder имеет другую структуру полей.
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val taskApi = retrofit.create(TaskApi::class.java)
-        val taskRepository = TaskRepositoryImpl(taskApi)
-
-        // 2. Domain Layer Setup
-        val getTasksUseCase = GetTasksUseCase(taskRepository)
-        val addTaskUseCase = AddTaskUseCase(taskRepository)
-
-        // 3. Presentation Layer Setup (Manual DI)
-        val factory = TasksViewModelFactory(getTasksUseCase, addTaskUseCase)
-        val viewModel: TasksViewModel = ViewModelProvider(this, factory)[TasksViewModel::class.java]
-
         setContent {
             MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    TasksScreen(viewModel = viewModel)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    NotesScreen()
                 }
             }
         }

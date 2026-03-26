@@ -1,6 +1,8 @@
 package com.example.lr_15_16_jetcom.di
 
 import android.content.Context
+import com.example.lr_15_16_jetcom.data.AppDatabase
+import com.example.lr_15_16_jetcom.data.NoteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,22 +10,22 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module // 1. Объявляем, что это модуль с зависимостями
-@InstallIn(SingletonComponent::class) // 2. Указываем, где эти зависимости живут (во всём приложении)
+// [ЛР 17] @Module - контейнер для зависимостей
+// [ЛР 17] @InstallIn(SingletonComponent::class) - живёт всё время приложения
+@Module
+@InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    @Provides // 3. Говорим Hilt: "Эта функция умеет создавать объект"
-    @Singleton // 4. Область видимости: один экземпляр на всё приложение
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "notes_db"
-        ).build()
+    // [ЛР 17] @Provides - говорит Hilt, как создать объект
+    // [ЛР 17/18] @Singleton - один экземпляр на всё приложение
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.getDatabase(context)
     }
 
     @Provides
     fun provideNoteDao(database: AppDatabase): NoteDao {
-        return database.noteDao() // Hilt сам подставит базу данных в этот параметр
+        return database.noteDao()
     }
 }
