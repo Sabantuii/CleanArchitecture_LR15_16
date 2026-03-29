@@ -9,17 +9,16 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-// [ЛР 17, Задание 3] Модуль для репозитория
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
-    // [ЛР 18, Задание 1]
     @Provides
     @Singleton
     fun provideTaskRepository(
-        api: TaskApi  // Hilt сам подставит TaskApi из NetworkModule
+        api: TaskApi,
+        @IoDispatcher ioDispatcher: kotlinx.coroutines.CoroutineDispatcher  // Добавляем dispatcher
     ): TaskRepository {
-        return TaskRepositoryImpl(api)
+        return TaskRepositoryImpl(api, ioDispatcher)  // Передаём в конструктор
     }
 }
