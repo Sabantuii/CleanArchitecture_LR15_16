@@ -2,7 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")  // ← Вместо KSP
+//    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -72,7 +73,8 @@ dependencies {
     // ===== 🔥 HILT (ЛР 17, Задание 1) =====
     implementation("com.google.dagger:hilt-android:2.48.1")
 
-    kapt("com.google.dagger:hilt-android-compiler:2.48.1")  // ← kapt вместо ksp
+    ksp("com.google.dagger:hilt-android-compiler:2.48.1")
+//    kapt("com.google.dagger:hilt-android-compiler:2.48.1")  // ← kapt вместо ksp
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // ===== DEBUG =====
@@ -87,6 +89,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
-kapt {
-    correctErrorTypes = true
+ksp {
+    arg("dagger.fastInit", "ENABLED")
+    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
 }
