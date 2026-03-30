@@ -29,11 +29,12 @@ class TaskRepositoryImpl @Inject constructor(  // [ЛР 17] @Inject для вн�
 
     override suspend fun addTask(task: Task): Result<Unit> = withContext(ioDispatcher) {
         try {
+            println("Отправляем задачу: ${task.title}")
             api.addTask(task.toDto())
+            println("Задача отправлена успешно")
             Result.success(Unit)
-        } catch (e: IOException) {
-            Result.failure(e)
         } catch (e: Exception) {
+            println("Ошибка: ${e.message}")
             Result.failure(e)
         }
     }
