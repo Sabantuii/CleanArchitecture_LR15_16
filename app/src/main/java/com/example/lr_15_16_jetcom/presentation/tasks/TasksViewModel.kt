@@ -55,4 +55,10 @@ class TasksViewModel @Inject constructor(  // [ЛР 17] @Inject говорит H
                 }
         }
     }
+    fun onEvent(event: TasksEvent) {
+        when (event) {
+            is TasksEvent.LoadTasks -> loadTasks()
+            is TasksEvent.AddTask -> addTask(event.title)
+        }
+    }
 }

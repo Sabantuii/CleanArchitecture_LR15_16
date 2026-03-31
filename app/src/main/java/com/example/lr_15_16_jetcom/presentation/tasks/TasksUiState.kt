@@ -7,3 +7,7 @@ data class TasksUiState(
     val isLoading: Boolean = false,
     val error: String? = null
 )
+sealed interface TasksEvent {
+    data object LoadTasks : TasksEvent
+    data class AddTask(val title: String) : TasksEvent
+}
