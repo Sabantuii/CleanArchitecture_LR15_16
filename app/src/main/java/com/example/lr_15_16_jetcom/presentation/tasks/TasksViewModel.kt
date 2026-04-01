@@ -1,5 +1,6 @@
 package com.example.lr_15_16_jetcom.presentation.tasks
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lr_15_16_jetcom.di.IoDispatcher
@@ -41,6 +42,10 @@ class TasksViewModel @Inject constructor(  // [ЛР 17] @Inject говорит H
 
     fun addTask(title: String) {
         if (title.isBlank()) return
+
+        // Логируем начало процесса
+        Log.d("TasksDebug", "Попытка добавить задачу: $title")
+
         viewModelScope.launch(ioDispatcher) {
             val task = Task(
                 id = 0L,
@@ -48,9 +53,15 @@ class TasksViewModel @Inject constructor(  // [ЛР 17] @Inject говорит H
                 isCompleted = false,
                 createdAt = System.currentTimeMillis()
             )
+
             addTaskUseCase(task)
-                .onSuccess { loadTasks() }
+                .onSuccess {
+                    Log.d("TasksDebug", "Задача успешно добавлена на сервер!")
+                    loadTasks() // Перезагружаем список
+                }
                 .onFailure { e ->
+                    // Логируем ошибку, если что-то пошло не так
+                    Log.e("TasksDebug", "Ошибка при добавлении задачи: ${e.message}", e)
                     _uiState.update { it.copy(error = e.message ?: "Ошибка добавления") }
                 }
         }
